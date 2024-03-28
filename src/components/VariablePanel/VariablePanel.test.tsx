@@ -27,6 +27,7 @@ const InTestIds = {
 jest.mock('../../hooks/useRuntimeVariables', () => ({
   useRuntimeVariables: jest.fn(() => ({
     variable: null,
+    getVariable: jest.fn(),
   })),
 }));
 

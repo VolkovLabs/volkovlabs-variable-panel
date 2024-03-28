@@ -31,11 +31,13 @@ export const useTable = ({
   data,
   options,
   eventBus,
+  panelEventBus,
   levels,
 }: {
   data: PanelData;
   options: PanelOptions;
   eventBus: EventBus;
+  panelEventBus: EventBus;
   levels?: Level[];
 }) => {
   /**
@@ -224,15 +226,15 @@ export const useTable = ({
         }))
         .filter((item) => item.values.length > 0)
         .forEach(({ variable, values }) => {
-          selectVariableValues(values, variable);
+          selectVariableValues(values, variable, panelEventBus);
         });
 
       /**
        * Update Variable Values
        */
-      selectVariableValues(values, runtimeVariable);
+      selectVariableValues(values, runtimeVariable, panelEventBus);
     },
-    [runtimeVariable, tableData]
+    [panelEventBus, runtimeVariable, tableData]
   );
 
   /**
@@ -399,7 +401,9 @@ export const useTable = ({
                 </label>
               )}
 
-              {runtimeVariable?.type === VariableType.TEXTBOX && <TextVariable variable={runtimeVariable} />}
+              {runtimeVariable?.type === VariableType.TEXTBOX && (
+                <TextVariable variable={runtimeVariable} panelEventBus={eventBus} />
+              )}
             </div>
           );
         },
@@ -453,15 +457,16 @@ export const useTable = ({
     options.favorites,
     options.groupSelection,
     options.showName,
-    tableData,
     styles.selectControl,
     styles.expandButton,
     styles.rowContent,
     styles.label,
     styles.status,
+    tableData,
     onChange,
-    onClick,
     theme,
+    eventBus,
+    onClick,
     favorites,
   ]);
 

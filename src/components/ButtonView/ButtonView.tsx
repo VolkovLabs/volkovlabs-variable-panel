@@ -27,6 +27,11 @@ interface Props {
    * Data
    */
   data: PanelData;
+
+  /**
+   * Panel Event Bus
+   */
+  panelEventBus: EventBus;
 }
 
 /**
@@ -44,6 +49,7 @@ export const ButtonView: React.FC<Props> = ({
     showLabel = false,
   } = {},
   eventBus,
+  panelEventBus,
 }) => {
   /**
    * Styles and Theme
@@ -156,6 +162,7 @@ export const ButtonView: React.FC<Props> = ({
                 variable,
                 emptyValueEnabled: emptyValue,
                 value,
+                panelEventBus,
               });
             }}
             data-testid={TEST_IDS.buttonView.item(value)}

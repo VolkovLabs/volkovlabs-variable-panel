@@ -1,3 +1,4 @@
+import { EventBus } from '@grafana/data';
 import { Input } from '@grafana/ui';
 import React, { ChangeEvent, KeyboardEvent, useCallback, useEffect, useState } from 'react';
 
@@ -11,15 +12,24 @@ import { selectVariableValues } from '../../utils';
 interface Props {
   /**
    * Variable
+   *
+   * @type {TextBoxVariable}
    */
   variable: TextBoxVariable;
+
+  /**
+   * Panel Event Bus
+   *
+   * @type {EventBus}
+   */
+  panelEventBus: EventBus;
 }
 
 /**
  * Text Variable
  * @param props
  */
-export const TextVariable: React.FC<Props> = ({ variable }) => {
+export const TextVariable: React.FC<Props> = ({ variable, panelEventBus }) => {
   /**
    * State
    */
@@ -43,8 +53,8 @@ export const TextVariable: React.FC<Props> = ({ variable }) => {
    * On Save
    */
   const onSave = useCallback(() => {
-    selectVariableValues([value], variable);
-  }, [value, variable]);
+    selectVariableValues([value], variable, panelEventBus);
+  }, [panelEventBus, value, variable]);
 
   /**
    * On Key Down

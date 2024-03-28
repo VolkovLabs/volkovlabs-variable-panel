@@ -4,6 +4,7 @@ export * from './useDashboardRedirect';
 export * from './useLocalStorage';
 export * from './usePersistentStorage';
 export * from './usePersistentValues';
+export * from './useResetVariable';
 export * from './useRuntimeVariables';
 export * from './useSavedState';
 export * from './useScrollTo';

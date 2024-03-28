@@ -28,6 +28,11 @@ interface Props {
    * Width
    */
   width: number;
+
+  /**
+   * Panel Event Bus
+   */
+  panelEventBus: EventBus;
 }
 
 /**
@@ -37,6 +42,7 @@ export const MinimizeView: React.FC<Props> = ({
   options: { variable: variableName, padding = 0, emptyValue = false, persistent = false, customValue = false } = {},
   eventBus,
   width,
+  panelEventBus,
 }) => {
   /**
    * Runtime Variables
@@ -82,10 +88,11 @@ export const MinimizeView: React.FC<Props> = ({
                 emptyValue={emptyValue}
                 persistent={persistent}
                 customValue={customValue}
+                panelEventBus={panelEventBus}
               />
             </div>
           )}
-          {variable.type === VariableType.TEXTBOX && <TextVariable variable={variable} />}
+          {variable.type === VariableType.TEXTBOX && <TextVariable variable={variable} panelEventBus={panelEventBus} />}
         </>
       </InlineField>
     </div>

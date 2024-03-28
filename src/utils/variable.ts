@@ -1,4 +1,4 @@
-import { TypedVariableModel } from '@grafana/data';
+import { EventBus, TypedVariableModel } from '@grafana/data';
 import { locationService } from '@grafana/runtime';
 
 import { ALL_VALUE, ALL_VALUE_PARAMETER, NO_VALUE_PARAMETER } from '../constants';
@@ -7,6 +7,7 @@ import {
   QueryVariableModel,
   RuntimeVariable,
   RuntimeVariableWithOptions,
+  VariableChangedEvent,
   VariableType,
 } from '../types';
 
@@ -14,17 +15,36 @@ import {
  * Set Variable Value
  * @param name
  * @param value
+ * @param eventBus
  */
-export const setVariableValue = (name: string, value: unknown) => {
-  locationService.partial({ [`var-${name}`]: value }, true);
+export const setVariableValue = (name: string, value: unknown, eventBus: EventBus) => {
+  /**
+   * Update value in url
+   */
+  locationService.partial(
+    {
+      [`var-${name}`]: value,
+    },
+    true
+  );
+
+  /**
+   * Emit variable changed event for reset
+   */
+  eventBus.publish(new VariableChangedEvent());
 };
 
 /**
  * Select Variable Values
  * @param values
  * @param runtimeVariable
+ * @param panelEventBus
  */
-export const selectVariableValues = (values: string[], runtimeVariable?: RuntimeVariable) => {
+export const selectVariableValues = (
+  values: string[],
+  runtimeVariable: RuntimeVariable | undefined,
+  panelEventBus: EventBus
+) => {
   if (!runtimeVariable) {
     return;
   }
@@ -39,12 +59,12 @@ export const selectVariableValues = (values: string[], runtimeVariable?: Runtime
        */
       if (multi) {
         if (values.some((value) => value === ALL_VALUE_PARAMETER)) {
-          setVariableValue(name, ALL_VALUE);
+          setVariableValue(name, ALL_VALUE, panelEventBus);
           return;
         }
 
         if (values.some((value) => value === NO_VALUE_PARAMETER)) {
-          setVariableValue(name, '');
+          setVariableValue(name, '', panelEventBus);
           return;
         }
 
@@ -77,14 +97,15 @@ export const selectVariableValues = (values: string[], runtimeVariable?: Runtime
         if (alreadySelectedValues.length === values.length) {
           setVariableValue(
             name,
-            selectedValues.filter((value) => !alreadySelectedValues.includes(value))
+            selectedValues.filter((value) => !alreadySelectedValues.includes(value)),
+            panelEventBus
           );
           return;
         }
 
         const uniqueValues = [...new Set(values.concat(selectedValues)).values()];
 
-        setVariableValue(name, uniqueValues);
+        setVariableValue(name, uniqueValues, panelEventBus);
         return;
       }
 
@@ -99,12 +120,12 @@ export const selectVariableValues = (values: string[], runtimeVariable?: Runtime
         value = '';
       }
 
-      setVariableValue(name, value);
+      setVariableValue(name, value, panelEventBus);
       return;
     }
     case VariableType.TEXTBOX: {
       const value = values[0];
-      setVariableValue(runtimeVariable.name, value);
+      setVariableValue(runtimeVariable.name, value, panelEventBus);
       return;
     }
     default: {

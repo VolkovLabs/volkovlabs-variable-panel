@@ -106,7 +106,7 @@ describe('ButtonView', () => {
    * Get Components
    */
   const getComponent = (props: Partial<Props>) => {
-    return <ButtonView data={data} {...(props as any)} />;
+    return <ButtonView data={data} panelEventBus={{}} {...(props as any)} />;
   };
 
   beforeEach(() => {
@@ -216,7 +216,7 @@ describe('ButtonView', () => {
     /**
      * All should be selected
      */
-    expect(selectVariableValues).toHaveBeenCalledWith([ALL_VALUE_PARAMETER], variable);
+    expect(selectVariableValues).toHaveBeenCalledWith([ALL_VALUE_PARAMETER], variable, expect.anything());
 
     /**
      * Should clear persistent values

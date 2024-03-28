@@ -39,7 +39,7 @@ describe('Text Variable', () => {
    * Get Tested Component
    */
   const getComponent = (props: Partial<Props>) => {
-    return <TextVariable variable={defaultVariable} {...(props as any)} />;
+    return <TextVariable variable={defaultVariable} panelEventBus={{} as any} {...(props as any)} />;
   };
 
   beforeEach(() => {
@@ -103,7 +103,7 @@ describe('Text Variable', () => {
 
     fireEvent.blur(selectors.root());
 
-    expect(selectVariableValues).toHaveBeenCalledWith(['hello'], defaultVariable);
+    expect(selectVariableValues).toHaveBeenCalledWith(['hello'], defaultVariable, expect.anything());
   });
 
   it('Should update variable value on enter', () => {
@@ -117,7 +117,7 @@ describe('Text Variable', () => {
 
     fireEvent.keyDown(selectors.root(), { key: 'Enter' });
 
-    expect(selectVariableValues).toHaveBeenCalledWith(['hello'], defaultVariable);
+    expect(selectVariableValues).toHaveBeenCalledWith(['hello'], defaultVariable, expect.anything());
   });
 
   it('Should blur field on escape', () => {

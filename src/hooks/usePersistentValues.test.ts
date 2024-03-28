@@ -99,10 +99,14 @@ describe('Use Persistent Values', () => {
         }) as any
     );
 
-    await act(async () => renderHook(() => usePersistentValues({ eventBus: {} as any, variableName, enabled: true })));
+    await act(async () =>
+      renderHook(() =>
+        usePersistentValues({ eventBus: {} as any, variableName, enabled: true, panelEventBus: {} as any })
+      )
+    );
 
     expect(sessionStorageMock.setItem).toHaveBeenCalledWith(`var-${variableName}`, JSON.stringify(['option2']));
-    expect(setVariableValue).toHaveBeenCalledWith(variableName, ['option1']);
+    expect(setVariableValue).toHaveBeenCalledWith(variableName, ['option1'], expect.anything());
   });
 
   it('Should restore values and remove them from the session storage', async () => {
@@ -144,10 +148,14 @@ describe('Use Persistent Values', () => {
      */
     sessionStorageMock.getItem.mockReturnValueOnce(JSON.stringify(['option2']));
 
-    await act(async () => renderHook(() => usePersistentValues({ eventBus: {} as any, variableName, enabled: true })));
+    await act(async () =>
+      renderHook(() =>
+        usePersistentValues({ eventBus: {} as any, variableName, enabled: true, panelEventBus: {} as any })
+      )
+    );
 
     expect(sessionStorageMock.setItem).toHaveBeenCalledWith(`var-${variableName}`, JSON.stringify([]));
-    expect(setVariableValue).toHaveBeenCalledWith(variableName, ['option2']);
+    expect(setVariableValue).toHaveBeenCalledWith(variableName, ['option2'], expect.anything());
   });
 
   it('Should select all value if no available values', async () => {
@@ -179,9 +187,13 @@ describe('Use Persistent Values', () => {
         }) as any
     );
 
-    await act(async () => renderHook(() => usePersistentValues({ eventBus: {} as any, variableName, enabled: true })));
+    await act(async () =>
+      renderHook(() =>
+        usePersistentValues({ eventBus: {} as any, variableName, enabled: true, panelEventBus: {} as any })
+      )
+    );
 
-    expect(setVariableValue).toHaveBeenCalledWith(variableName, [ALL_VALUE]);
+    expect(setVariableValue).toHaveBeenCalledWith(variableName, [ALL_VALUE], expect.anything());
   });
 
   it('Should work if no previously saved values', async () => {
@@ -223,7 +235,11 @@ describe('Use Persistent Values', () => {
      */
     sessionStorageMock.getItem.mockReturnValueOnce(null);
 
-    await act(async () => renderHook(() => usePersistentValues({ eventBus: {} as any, variableName, enabled: true })));
+    await act(async () =>
+      renderHook(() =>
+        usePersistentValues({ eventBus: {} as any, variableName, enabled: true, panelEventBus: {} as any })
+      )
+    );
 
     expect(sessionStorageMock.setItem).not.toHaveBeenCalled();
     expect(setVariableValue).not.toHaveBeenCalled();

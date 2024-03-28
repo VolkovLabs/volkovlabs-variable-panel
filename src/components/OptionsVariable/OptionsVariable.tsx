@@ -1,4 +1,4 @@
-import { SelectableValue } from '@grafana/data';
+import { EventBus, SelectableValue } from '@grafana/data';
 import { Select } from '@grafana/ui';
 import React, { useCallback, useMemo } from 'react';
 
@@ -38,13 +38,20 @@ interface Props {
    * @type {boolean}
    */
   customValue: boolean;
+
+  /**
+   * Panel Event Bus
+   *
+   * @type {EventBus}
+   */
+  panelEventBus: EventBus;
 }
 
 /**
  * Options Variable
  * @param props
  */
-export const OptionsVariable: React.FC<Props> = ({ variable, emptyValue, persistent, customValue }) => {
+export const OptionsVariable: React.FC<Props> = ({ variable, emptyValue, persistent, customValue, panelEventBus }) => {
   /**
    * Persistent storage
    */
@@ -76,9 +83,10 @@ export const OptionsVariable: React.FC<Props> = ({ variable, emptyValue, persist
         value: Array.isArray(value) ? value.map((option: SelectableValue) => option.value) : value.value || '',
         variable,
         emptyValueEnabled: emptyValue,
+        panelEventBus,
       });
     },
-    [emptyValue, persistent, persistentStorage, values, variable]
+    [emptyValue, panelEventBus, persistent, persistentStorage, values, variable]
   );
 
   /**

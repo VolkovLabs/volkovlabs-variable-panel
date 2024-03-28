@@ -26,10 +26,12 @@ const uniqueValues = <T>(array: T[]): T[] => {
  */
 export const usePersistentValues = ({
   eventBus,
+  panelEventBus,
   variableName,
   enabled,
 }: {
   eventBus: EventBus;
+  panelEventBus: EventBus;
   variableName: string;
   enabled: boolean;
 }) => {
@@ -84,7 +86,7 @@ export const usePersistentValues = ({
         /**
          * Update variable values to remove unavailable from url
          */
-        setVariableValue(variable.name, valuesInState.length ? valuesInState : [ALL_VALUE]);
+        setVariableValue(variable.name, valuesInState.length ? valuesInState : [ALL_VALUE], panelEventBus);
       }
 
       const savedValues = persistentStorage.get();
@@ -108,8 +110,8 @@ export const usePersistentValues = ({
         /**
          * Update variable values with available values which were selected before
          */
-        setVariableValue(variable.name, valuesInState.concat(valuesNotInState));
+        setVariableValue(variable.name, valuesInState.concat(valuesNotInState), panelEventBus);
       }
     }
-  }, [enabled, persistentStorage, variable]);
+  }, [enabled, eventBus, panelEventBus, persistentStorage, variable]);
 };

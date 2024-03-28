@@ -1,3 +1,5 @@
+import { BusEventBase } from '@grafana/data';
+
 /**
  * Display Mode
  */
@@ -207,6 +209,13 @@ export interface PanelOptions extends TableViewOptions {
    * @type {string}
    */
   saveSelectedGroupKey: string;
+
+  /**
+   * Reset variable
+   *
+   * @type {string}
+   */
+  resetVariable: string;
 }
 
 /**
@@ -219,3 +228,10 @@ export type RecursivePartial<T> = {
       ? RecursivePartial<T[P]>
       : T[P];
 };
+
+/**
+ * Variable Changed Event
+ */
+export class VariableChangedEvent extends BusEventBase {
+  static type = 'variable-changed';
+}

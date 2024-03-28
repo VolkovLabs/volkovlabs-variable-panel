@@ -57,6 +57,7 @@ export const plugin = new PanelPlugin<PanelOptions>(VariablePanel)
     const showForMinimizeView = (config: PanelOptions) => config.displayMode === DisplayMode.MINIMIZE;
     const showForButtonView = (config: PanelOptions) => config.displayMode === DisplayMode.BUTTON;
     const showForTableView = (config: PanelOptions) => config.displayMode === DisplayMode.TABLE;
+    const isVariableSelected = (config: PanelOptions) => !!config.variable;
 
     /**
      * Common Options
@@ -214,6 +215,19 @@ export const plugin = new PanelPlugin<PanelOptions>(VariablePanel)
         },
         category: ['Layout'],
         showIf: (config) => showForMinimizeView(config) || !config.groups?.length,
+      })
+      .addSelect({
+        path: 'resetVariable',
+        name: 'Select variable to reset',
+        settings: {
+          options: [],
+          getOptions: async (context) => {
+            return variableOptions.filter((option) => option.label !== context.options.variable);
+          },
+          isClearable: true,
+        },
+        category: ['Layout'],
+        showIf: (config) => isVariableSelected(config),
       })
       .addCustomEditor({
         id: 'groups',

@@ -1,5 +1,5 @@
 import { css, cx } from '@emotion/css';
-import { PanelProps } from '@grafana/data';
+import { EventBus, PanelProps } from '@grafana/data';
 import { Alert, ClickOutsideWrapper, ToolbarButton, ToolbarButtonRow, useTheme2 } from '@grafana/ui';
 import React, { useEffect, useMemo, useRef } from 'react';
 
@@ -12,12 +12,17 @@ import { getStyles } from './TableView.styles';
 /**
  * Properties
  */
-interface Props extends PanelProps<PanelOptions> {}
+interface Props extends PanelProps<PanelOptions> {
+  /**
+   * Panel Event Bus
+   */
+  panelEventBus: EventBus;
+}
 
 /**
  * Table View
  */
-export const TableView: React.FC<Props> = ({ data, id, options, width, height, eventBus }) => {
+export const TableView: React.FC<Props> = ({ data, id, options, width, height, eventBus, panelEventBus }) => {
   /**
    * Current group
    */
@@ -49,7 +54,13 @@ export const TableView: React.FC<Props> = ({ data, id, options, width, height, e
   /**
    * Table config
    */
-  const { tableData, columns, getSubRows } = useTable({ data, options, eventBus, levels: currentLevels });
+  const { tableData, columns, getSubRows } = useTable({
+    data,
+    options,
+    eventBus,
+    levels: currentLevels,
+    panelEventBus,
+  });
 
   /**
    * Sticky position
