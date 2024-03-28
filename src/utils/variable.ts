@@ -24,7 +24,7 @@ export const setVariableValue = (name: string, value: unknown) => {
  * @param values
  * @param runtimeVariable
  */
-export const selectVariableValues = (values: string[], runtimeVariable?: RuntimeVariable) => {
+export const selectVariableValues = (values: string[], runtimeVariable?: RuntimeVariable, groupSelection?: boolean) => {
   if (!runtimeVariable) {
     return;
   }
@@ -54,8 +54,10 @@ export const selectVariableValues = (values: string[], runtimeVariable?: Runtime
         const selectedValues = locationService
           .getSearch()
           .getAll(`var-${name}`)
-          .filter((s) => s.toLowerCase().indexOf('all') !== 0);
-
+          .filter((s) => s.toLowerCase().indexOf('all') !== 0)
+          .filter((value) =>
+            groupSelection ? runtimeVariable.options.some((option) => option.value === value) : true
+          );
         /**
          * Values selected, but not defined in the URL
          */
